@@ -1,4 +1,6 @@
-function renderLoginScreen() {
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+function renderLoginScreen(auth) {
   const appContainer = document.getElementById('app-container');
 
   const loginHtml = `
@@ -38,7 +40,7 @@ function renderLoginScreen() {
     errorElement.textContent = '';
 
     // Sign in with Firebase
-    auth.signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // SUCCESS! onAuthStateChanged will handle the navigation.
       })
@@ -60,3 +62,5 @@ function renderLoginScreen() {
       });
   });
 }
+
+export { renderLoginScreen };

@@ -32,18 +32,25 @@
 
 
 // Initialize Firebase services
-const auth = firebase.auth();
-const db = firebase.firestore();
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Main app router
-auth.onAuthStateChanged(user => {
+import { renderHomeScreen } from "./home.js";
+import { renderLoginScreen } from "./auth.js";
+
+// Main app router
+onAuthStateChanged(auth, user => {
   if (user) {
     // User is signed in.
     console.log('Auth state changed: User is signed in.', user);
-    renderHomeScreen(user);
+    renderHomeScreen(user, auth);
   } else {
     // User is signed out.
     console.log('Auth state changed: User is signed out.');
-    renderLoginScreen();
+    renderLoginScreen(auth);
   }
 });

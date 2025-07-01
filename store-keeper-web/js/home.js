@@ -1,4 +1,6 @@
-function renderHomeScreen(user) {
+import { signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+function renderHomeScreen(user, auth) {
   const appContainer = document.getElementById('app-container');
 
   const homeHtml = `
@@ -19,7 +21,7 @@ function renderHomeScreen(user) {
   // Add event listener for the logout button
   const logoutButton = document.getElementById('logout-btn');
   logoutButton.addEventListener('click', () => {
-    auth.signOut().then(() => {
+    signOut(auth).then(() => {
       console.log('User signed out successfully.');
       // onAuthStateChanged will handle re-rendering the login screen
     }).catch((error) => {
@@ -27,3 +29,5 @@ function renderHomeScreen(user) {
     });
   });
 }
+
+export { renderHomeScreen };
