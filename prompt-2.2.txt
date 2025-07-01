@@ -1,0 +1,156 @@
+Excellent. The application's interface is now in place. The next critical step is to bring it to life by populating the products screen with real data from our Firestore database.
+This prompt will introduce the concept of real-time data fetching. When data changes in our database, the UI will update automatically without needing a page refresh.
+Operator, here is your next assignment.
+Your workflow:
+Prepare Firestore: Before giving the prompt to the AI, you must manually create the data it will look for.
+Go to your Firebase project console.
+Navigate to Firestore Database.
+Click "+ Start collection". Enter products as the Collection ID.
+Now, add a few documents to this collection. For each document, click "Auto-ID" for the Document ID, and add the following fields:
+name (Type: string, Value: e.g., "Indomie Noodles")
+sellingPrice (Type: number, Value: e.g., 250)
+stockQuantity (Type: number, Value: e.g., 150)
+Add 2-3 different products so you have data to display.
+Feed the Prompt to the AI: Now, provide the following prompt to the builder.
+Review the Output: The AI will modify js/products.js and js/home.js and add CSS to css/style.css.
+Integrate and Test:
+Log into your app and navigate to the Products screen.
+The "Loading products..." message should be replaced by the list of products you just created in Firestore.
+Test the real-time feature: While the app is open, go back to the Firestore console and change the sellingPrice or stockQuantity of one of your products. The change should appear in your web app almost instantly, without a refresh.
+Commit the verified code with the message: feat: Display real-time product list from Firestore.
+Confirm back to me when you are ready to add functionality for creating new products.
+Prompt 2.2 (Web Edition): Fetch and Display Real-time Products
+[CONTEXT]
+We have a renderProductsScreen function that creates the UI for the products page, including an empty <div id="product-list">. We need to populate this div with data from our products collection in Firestore. The global db variable for Firestore is available.
+Expected Data Structure in Firestore (products collection):
+Generated json
+{
+  "name": "string",
+  "sellingPrice": "number",
+  "stockQuantity": "number"
+}
+Use code with caution.
+Json
+[OBJECTIVE]
+Use Firestore's real-time onSnapshot listener to fetch all documents from the products collection and dynamically render them as a list on the products screen. The list must update automatically if the data changes in the database.
+[INSTRUCTIONS]
+Modify js/products.js:
+Create a new function named listenForProducts().
+Inside this function, get a reference to the #product-list div.
+Use db.collection('products').onSnapshot(snapshot => { ... }) to listen for real-time updates.
+Inside the onSnapshot callback:
+Check if the snapshot is empty (snapshot.empty). If it is, set the innerHTML of the product list div to <p>No products found. Use the '+' button to add your first product.</p>.
+If the snapshot is not empty, map through snapshot.docs. For each doc, create an HTML string for a product item. This item should display the product's name, stockQuantity, and sellingPrice. Use a div with a class product-item.
+Join the array of HTML strings and set the innerHTML of the product list div to the result.
+Modify js/home.js:
+In the renderHomeScreen function, after the line mainContent.innerHTML = renderProductsScreen();, you must call our new function: listenForProducts();. This "activates" the listener after the UI is on the page.
+Modify css/style.css:
+Add styling for the .product-item class to make it look like a list item with clear separation of information.
+[DELIVERABLES]
+1. Updated code for js/products.js (replace the entire file's content):
+Generated javascript
+function renderProductsScreen() {
+  const productsHtml = `
+    <div class="product-list-container">
+      <div class="product-list-header">
+        <input type="search" id="product-search" placeholder="Search products...">
+        <button id="add-product-btn" class="btn btn-primary">+</button>
+      </div>
+      <div id="product-list" class="product-list">
+        <p>Loading products...</p>
+      </div>
+    </div>
+  `;
+  return productsHtml;
+}
+
+function listenForProducts() {
+  const productListDiv = document.getElementById('product-list');
+  if (!productListDiv) return; // Exit if the element isn't on the page
+
+  db.collection('products').onSnapshot(snapshot => {
+    if (snapshot.empty) {
+      productListDiv.innerHTML = `<p>No products found. Use the '+' button to add your first product.</p>`;
+      return;
+    }
+
+    let productsHtml = '';
+    snapshot.forEach(doc => {
+      const product = doc.data();
+      const productId = doc.id;
+      productsHtml += `
+        <div class="product-item" data-id="${productId}">
+          <div class="product-info">
+            <span class="product-name">${product.name}</span>
+            <span class="product-stock">Stock: ${product.stockQuantity}</span>
+          </div>
+          <div class="product-price">
+            <span>₦${product.sellingPrice.toLocaleString()}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    productListDiv.innerHTML = productsHtml;
+  }, error => {
+    console.error("Error fetching products: ", error);
+    productListDiv.innerHTML = `<p class="error-message">Could not load products. Please try again later.</p>`;
+  });
+}
+Use code with caution.
+JavaScript
+2. Updated code for js/home.js (a one-line addition):
+Find the renderHomeScreen function and add the call to listenForProducts() at the end, before the comment.
+Generated javascript
+// Inside renderHomeScreen(user)...
+  const mainContent = document.getElementById('main-content');
+  mainContent.innerHTML = renderProductsScreen();
+
+  // Activate the listener for the products screen
+  listenForProducts(); // <--- ADD THIS LINE
+
+  // Re-attach logout event listener
+  document.getElementById('logout-btn').addEventListener('click', () => {
+//... rest of the function is the same
+Use code with caution.
+JavaScript
+3. Additional CSS for css/style.css (append this):
+Generated css
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #eef0f2;
+  border-radius: 8px;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.product-stock {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.product-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #007bff;
+}
+Use code with caution.
+Css
+[ANTI-HALLUCINATION CHECK]
+You must use onSnapshot for real-time updates, not a one-time get().
+The logic must correctly handle the empty state (no products in the collection).
+The data-fetching logic (listenForProducts) must be separate from the initial UI rendering logic (renderProductsScreen).
+Error handling for the onSnapshot listener must be included.
+Awaiting your confirmation to proceed.

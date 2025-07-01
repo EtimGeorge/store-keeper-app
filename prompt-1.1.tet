@@ -1,0 +1,90 @@
+Prompt 1.1 (Web Edition): Project Scaffolding & Firebase Setup
+[OBJECTIVE]
+Create the basic file structure for our web application, including HTML, CSS, and JavaScript files. We will also include the necessary Firebase SDK scripts to prepare for authentication.
+[INSTRUCTIONS]
+Create a new project folder named store-keeper-web.
+Inside this folder, create the following file and directory structure:
+Generated code
+store-keeper-web/
+├── index.html
+├── js/
+│   ├── app.js
+│   └── auth.js
+└── css/
+    └── style.css
+Use code with caution.
+Populate index.html:
+Create a standard HTML5 boilerplate.
+Set the <title> to "Store Keeper".
+In the <head>, add a viewport meta tag for responsive design: <meta name="viewport" content="width=device-width, initial-scale=1.0">.
+Link to your css/style.css stylesheet.
+In the <body>, just before the closing </body> tag, add the following script tags. These are Firebase's official SDKs.
+Generated html
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+
+<!-- Our Scripts -->
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+Use code with caution.
+Html
+The body's content should be a single div with the id app-container. This div is where we will dynamically render all our application's views.
+Populate js/app.js:
+This file will contain our Firebase configuration and main app logic.
+Add a placeholder for the Firebase config object. We will fill this in later from the Firebase Console.
+Initialize the Firebase app.
+Initialize references to Firebase services (Auth and Firestore).
+Generated javascript
+// TODO: Replace with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Initialize Firebase services
+const auth = firebase.auth();
+const db = firebase.firestore();
+Use code with caution.
+JavaScript
+Populate css/style.css:
+Add some basic resets and styling to make our app feel more like an app and less like a standard webpage.
+Generated css
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0;
+    background-color: #f4f6f8;
+    color: #333;
+}
+
+#app-container {
+    max-width: 450px; /* Mobile-first container */
+    margin: 0 auto;
+    background-color: #fff;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+Use code with caution.
+Css
+Leave js/auth.js empty for now.
+[DELIVERABLES]
+I expect you to provide the complete contents for the following three files:
+index.html
+js/app.js
+css/style.css
+[ANTI-HALLUCINATION CHECK]
+Do not add any visible HTML elements inside the #app-container div yet.
+Do not add any functions to the JavaScript files yet, only the initialization code.
+Use the exact Firebase SDK versions and file names as specified.
+Operator Action Required:
+Execute this prompt. Once you have created the files and verified they are correct, open index.html with Live Server. You should see a blank white page (or light gray with a white centered container). Open the browser console (F12); you should see no errors.
+Once verified and committed to Git, confirm you are ready to proceed.

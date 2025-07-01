@@ -1,0 +1,227 @@
+Excellent. The login functionality is now working. We can successfully authenticate a user against Firebase. However, upon successful login, the user is still stuck on the login screen.
+
+Our next task is to create the main "wrapper" logic that listens for authentication state changes. This is the cornerstone of a single-page application (SPA). It will automatically switch the view from the login screen to the main application screen when a user logs in, and back again when they log out.
+
+Operator, here is your next assignment.
+
+Your workflow:
+
+Feed this prompt to the AI builder.
+
+Review the AI's output carefully. It will modify js/app.js and js/auth.js, and create a new file, js/home.js.
+
+Integrate the new code into your project. Remember to add the <script> tag for the new home.js file in your index.html.
+
+Refresh your app.
+
+Test Case 1 (Logged Out): The app should load and display the login screen as before.
+
+Test Case 2 (Logging In): Log in with your test user. The screen should now automatically change to a simple page that says "Welcome, [user's email]". The console should log "Auth state changed: User is signed in."
+
+Test Case 3 (Already Logged In): Refresh the page. The app should briefly show a blank screen (or a loading indicator we will add later) and then go directly to the "Welcome..." page, bypassing the login screen completely because Firebase remembers the user's session.
+
+Commit the verified code to your Git repository with the message: feat: Implement auth state listener and home screen view.
+
+Confirm back to me when you are ready to build out the main application UI.
+
+Prompt 1.4 (Web Edition): Auth State Listener & Home Screen
+
+[CONTEXT]
+Currently, js/app.js renders the login screen when the DOM content is loaded. The login function in js/auth.js authenticates the user but does nothing visually upon success.
+
+[OBJECTIVE]
+Implement Firebase's onAuthStateChanged listener. This listener will be the central router for our application. If a user is logged in, it will render the home screen; otherwise, it will render the login screen. We will also create a simple placeholder home screen and a logout button.
+
+[INSTRUCTIONS]
+
+Create js/home.js:
+
+Create a new file at this path.
+
+Inside, create a function renderHomeScreen(user). This function will take the Firebase user object as an argument.
+
+It should generate HTML for a basic home screen, including a welcome message and a logout button. Use the user's email in the welcome message.
+
+The function should set the innerHTML of the #app-container.
+
+After setting the HTML, add an event listener to the logout button (#logout-btn) that calls auth.signOut().
+
+Modify js/auth.js:
+
+Remove the console.log from the .then() block of the signInWithEmailAndPassword function. We no longer need it because the onAuthStateChanged listener will handle the success case automatically.
+
+Modify js/app.js:
+
+Remove the DOMContentLoaded event listener that calls renderLoginScreen().
+
+Replace it with the auth.onAuthStateChanged() listener.
+
+Inside the listener's callback, you will receive a user object.
+
+Use an if statement:
+
+if (user): The user is signed in. Log "Auth state changed: User is signed in." to the console and call renderHomeScreen(user).
+
+else: The user is signed out. Log "Auth state changed: User is signed out." to the console and call renderLoginScreen().
+
+Modify index.html:
+
+Add a script tag for our new js/home.js file. Place it before the other custom script tags.
+
+Generated html
+<!-- Our Scripts -->
+<script src="js/home.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+
+
+[DELIVERABLES]
+
+1. Complete code for the new file js/home.js:
+
+Generated javascript
+function renderHomeScreen(user) {
+  const appContainer = document.getElementById('app-container');
+
+  const homeHtml = `
+    <div class="main-container">
+      <div class="header">
+        <h2>Store Keeper</h2>
+        <button id="logout-btn" class="btn btn-secondary">Logout</button>
+      </div>
+      <div class="content">
+        <h3>Welcome, ${user.email}!</h3>
+        <p>This is your main dashboard. Inventory and sales features will appear here.</p>
+      </div>
+    </div>
+  `;
+
+  appContainer.innerHTML = homeHtml;
+
+  // Add event listener for the logout button
+  const logoutButton = document.getElementById('logout-btn');
+  logoutButton.addEventListener('click', () => {
+    auth.signOut().then(() => {
+      console.log('User signed out successfully.');
+      // onAuthStateChanged will handle re-rendering the login screen
+    }).catch((error) => {
+      console.error('Sign out error', error);
+    });
+  });
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+2. Updated code for js/app.js (replace the entire file's content):
+
+Generated javascript
+// TODO: Replace with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Initialize Firebase services
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Main app router
+auth.onAuthStateChanged(user => {
+  if (user) {
+    // User is signed in.
+    console.log('Auth state changed: User is signed in.', user);
+    renderHomeScreen(user);
+  } else {
+    // User is signed out.
+    console.log('Auth state changed: User is signed out.');
+    renderLoginScreen();
+  }
+});
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+3. Small change for js/auth.js:
+
+In the signInWithEmailAndPassword function, the .then() block should now be empty.
+
+Generated javascript
+// Inside the submit event listener...
+auth.signInWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    // SUCCESS! onAuthStateChanged will handle the navigation.
+  })
+  .catch((error) => {
+    // ... (error handling remains the same)
+  });
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+4. Additional CSS for css/style.css (append this):
+
+Generated css
+.main-container {
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.content {
+  padding-top: 1rem;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Css
+IGNORE_WHEN_COPYING_END
+
+[ANTI-HALLUCINATION CHECK]
+
+The onAuthStateChanged listener in app.js must be the only top-level code that runs. All view rendering decisions must flow from it.
+
+The renderHomeScreen function must accept the user object as a parameter to display personalized content.
+
+Ensure the logout button is wired up correctly to auth.signOut().
+
+Awaiting your confirmation to proceed.

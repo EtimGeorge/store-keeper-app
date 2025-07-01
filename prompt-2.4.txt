@@ -1,0 +1,179 @@
+Excellent. The product management feature is now functional. The app is starting to become a genuinely useful tool.
+
+Before we build the next major feature (the Point of Sale system), we must make the application's main navigation work. Right now, the "POS" and "History" buttons are just static icons. We need to wire them up to switch the content displayed in the main area.
+
+Operator, here is your next assignment.
+
+Your workflow:
+
+Feed this prompt to the AI builder.
+
+Review the AI's output. It will create two new JavaScript files (pos.js, history.js), modify home.js, and require a change to index.html.
+
+Integrate the new code. Crucially, remember to add the new <script> tags to index.html.
+
+Test the functionality:
+
+Log into the app. The Products screen should appear by default.
+
+Click the "POS" button on the bottom navigation. The content area should change to show "Point of Sale Screen". The POS button should become active (blue), and the Products button should become inactive (gray).
+
+Click the "History" button. The content should change to "Sales History Screen", and the History button should become active.
+
+Click the "Products" button again. The view should return to the product list, and the real-time listener should still work correctly.
+
+Commit the verified code with the message: feat: Implement bottom navigation view switching.
+
+Confirm back to me when you are ready to build the Point of Sale (POS) interface.
+
+Prompt 2.4 (Web Edition): Implement Bottom Navigation Logic
+
+[CONTEXT]
+In js/home.js, the renderHomeScreen function builds an application shell with three navigation buttons (#nav-pos, #nav-products, #nav-history). Currently, only the Products screen is displayed, and the other buttons are not functional.
+
+[OBJECTIVE]
+Implement the client-side routing logic for the bottom navigation bar. Clicking a button should render the corresponding view in the #main-content area and update the visual "active" state of the button.
+
+[INSTRUCTIONS]
+
+Create Placeholder Screen Files:
+
+Create a new file js/pos.js. Inside, create a function renderPosScreen() that returns a simple HTML string: <div><h2>Point of Sale</h2><p>This is where you will add items to a cart and complete a sale.</p></div>.
+
+Create a new file js/history.js. Inside, create a function renderHistoryScreen() that returns a simple HTML string: <div><h2>Sales History</h2><p>A list of all completed transactions will appear here.</p></div>.
+
+Update index.html:
+
+You must add script tags for the two new JavaScript files. The order matters. Place them before auth.js.
+
+Generated html
+<!-- Our Scripts -->
+<script src="js/pos.js"></script>
+<script src="js/history.js"></script>
+<script src="js/products.js"></script>
+<script src="js/home.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+
+
+Modify js/home.js:
+
+In the renderHomeScreen function, locate the // TODO: Add event listeners for nav buttons comment. We will now implement this logic.
+
+Get references to all three navigation buttons and the #main-content div.
+
+Add a click event listener to each of the three navigation buttons (#nav-pos, #nav-products, #nav-history).
+
+When a button is clicked:
+
+First, remove the .active class from all three navigation buttons.
+
+Second, add the .active class to the clicked button.
+
+Third, update the innerHTML of the #main-content div by calling the appropriate render function (renderPosScreen(), renderProductsScreen(), or renderHistoryScreen()).
+
+Important: When rendering the products screen, you must also call listenForProducts() again to re-attach the real-time listener.
+
+[DELIVERABLES]
+
+1. Complete code for the new file js/pos.js:
+
+Generated javascript
+function renderPosScreen() {
+  const posHtml = `
+    <div class="view-container">
+      <h2>Point of Sale</h2>
+      <p>This is where you will add items to a cart and complete a sale.</p>
+    </div>
+  `;
+  return posHtml;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+2. Complete code for the new file js/history.js:
+
+Generated javascript
+function renderHistoryScreen() {
+  const historyHtml = `
+    <div class="view-container">
+      <h2>Sales History</h2>
+      <p>A list of all completed transactions will appear here.</p>
+    </div>
+  `;
+  return historyHtml;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+3. The required changes for index.html (add these two lines):
+
+Generated html
+<script src="js/pos.js"></script>
+<script src="js/history.js"></script>
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Html
+IGNORE_WHEN_COPYING_END
+
+4. Updated code for js/home.js (specifically, the navigation logic part):
+
+Replace the // TODO section at the end of renderHomeScreen with the following logic.
+
+Generated javascript
+// ... inside renderHomeScreen, after all the HTML has been rendered ...
+
+  // --- NAVIGATION LOGIC ---
+  const mainContent = document.getElementById('main-content');
+  const navPosBtn = document.getElementById('nav-pos');
+  const navProductsBtn = document.getElementById('nav-products');
+  const navHistoryBtn = document.getElementById('nav-history');
+
+  const allNavButtons = [navPosBtn, navProductsBtn, navHistoryBtn];
+
+  function handleNavClick(activeBtn, renderFunction) {
+    allNavButtons.forEach(btn => btn.classList.remove('active'));
+    activeBtn.classList.add('active');
+    mainContent.innerHTML = renderFunction();
+
+    // Special case for products screen to re-attach listener
+    if (renderFunction === renderProductsScreen) {
+      listenForProducts();
+    }
+  }
+
+  navPosBtn.addEventListener('click', () => handleNavClick(navPosBtn, renderPosScreen));
+  navProductsBtn.addEventListener('click', () => handleNavClick(navProductsBtn, renderProductsScreen));
+  navHistoryBtn.addEventListener('click', () => handleNavClick(navHistoryBtn, renderHistoryScreen));
+
+  // --- End of Navigation Logic ---
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+You should place this logic where the previous TODO comment was, replacing the temporary event delegation logic for the add product button. We will re-add that in a more robust way later.
+
+To be clear, you should replace the entire section from // --- START NEW CODE --- to // --- END NEW CODE --- in the previous prompt's output for home.js with this new, more complete navigation logic.
+
+[ANTI-HALLUCINATION CHECK]
+
+Do not implement the full UI for the POS or History screens; use the simple placeholder text as specified.
+
+The navigation logic must correctly manage the .active class, ensuring only one button is active at a time.
+
+Crucially, when navigating back to the Products screen, the listenForProducts() function must be called again to ensure the real-time data connection is re-established for the newly created #product-list div.
+
+Awaiting your confirmation to proceed.

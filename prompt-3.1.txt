@@ -1,0 +1,186 @@
+Excellent. Our application now has a fully functional navigation system. This is a crucial step that transforms our collection of screens into a cohesive single-page application.
+
+Now we can focus on the most important feature for a store owner: the Point of Sale (POS) system. We will build the interface for adding products to a cart, viewing the total, and preparing for checkout. This will be a UI-focused step.
+
+Operator, here is your next assignment.
+
+Your workflow:
+
+Feed this prompt to the AI builder.
+
+Review the AI's output. It will replace the placeholder content in js/pos.js and add new CSS to css/style.css.
+
+Integrate the new code into your project.
+
+Test the UI:
+
+Log into the app and click the "POS" navigation button.
+
+You should now see the new POS interface: an empty cart area, a section for adding products, and a summary area at the bottom with a "Charge" button.
+
+The layout should be responsive and look good on a mobile device screen.
+
+None of the buttons ("Add Product", "Charge") will work yet. This is expected.
+
+Commit the verified code with the message: feat(ui): Build Point of Sale screen UI.
+
+Confirm back to me when you are ready to add the logic for selecting products and adding them to the cart.
+
+Prompt 3.1 (Web Edition): Point of Sale (POS) Screen UI
+
+[CONTEXT]
+The renderPosScreen() function in js/pos.js currently returns a simple placeholder div. We need to replace this with a proper user interface for capturing a sale, based on our wireframe.
+
+Wireframe W3: POS (Point of Sale) / Cart Screen
+
+Generated code
++--------------------------------------------------+
+| Top Bar: New Sale             [Offline Indicator]| // Top bar is part of shell
++--------------------------------------------------+
+|  +--------------------------------------------+  |
+|  |       Your cart is empty.                  |  | // Cart Items Area
+|  |                                            |  |
+|  +--------------------------------------------+  |
+|                                                  |
+|  [+] Add Product to Cart                         | // Action Area
+|                                                  |
+|  +--------------------------------------------+  |
+|  |  Total:                                ₦0.00 |  | // Summary Area
+|  |  [           CHARGE ₦0.00           ]       |  |
+|  +--------------------------------------------+  |
+|                                                  |
++--------------------------------------------------+
+
+
+(Note: We will implement the "Add Product" functionality as a modal, similar to how we did for creating products.)
+
+[OBJECTIVE]
+Build the user interface for the Point of Sale screen. This includes three main sections: the cart items display, an action button to add products, and a summary footer with the total and a charge button. This is a UI-only task.
+
+[INSTRUCTIONS]
+
+Modify js/pos.js:
+
+Completely rewrite the renderPosScreen() function.
+
+It should return an HTML string for the POS screen layout. This layout should be a flex container that allows the summary footer to stick to the bottom.
+
+Create a div with id="cart-items" for displaying items. It should initially contain a message like "Your cart is empty."
+
+Create a div for the main action, containing a button with id="show-product-selector-btn" and text "Add Product to Cart".
+
+Create a footer div with class pos-footer. Inside, display the total amount (initially ₦0.00) and a "Charge" button with id="charge-btn", which should be disabled by default.
+
+Modify css/style.css:
+
+Add styling to create the desired POS layout. Use Flexbox on the main container (.pos-container) to make the cart items area grow and push the footer to the bottom.
+
+Style the cart items area, the "Add Product" button, and the footer, including the disabled state for the charge button.
+
+[DELIVERABLES]
+
+1. Updated code for js/pos.js (replace the entire file's content):
+
+Generated javascript
+function renderPosScreen() {
+  const posHtml = `
+    <div class="pos-container">
+      <div id="cart-items" class="cart-items-container">
+        <p class="empty-cart-message">Your cart is empty.</p>
+      </div>
+
+      <div class="pos-actions">
+        <button id="show-product-selector-btn" class="btn btn-secondary">
+          + Add Product to Cart
+        </button>
+      </div>
+
+      <div class="pos-footer">
+        <div class="total-display">
+          <span>Total</span>
+          <span id="cart-total">₦0.00</span>
+        </div>
+        <button id="charge-btn" class="btn btn-primary" disabled>
+          Charge ₦0.00
+        </button>
+      </div>
+    </div>
+  `;
+  return posHtml;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+2. Additional CSS for css/style.css (append this):
+
+Generated css
+/* POS Screen Layout */
+.pos-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Important for footer to stick to bottom */
+}
+
+.cart-items-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.empty-cart-message {
+  text-align: center;
+  margin-top: 4rem;
+  color: #777;
+}
+
+.pos-actions {
+  padding: 1rem;
+  text-align: center;
+}
+
+.pos-actions .btn-secondary {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+}
+
+.pos-footer {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+}
+
+.total-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+#charge-btn:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Css
+IGNORE_WHEN_COPYING_END
+
+[ANTI-HALLUCINATION CHECK]
+
+Do not add any JavaScript logic or event listeners in this step.
+
+The charge button must have the disabled attribute in the initial HTML.
+
+The layout must be created using Flexbox to ensure the footer is always at the bottom of the screen, even if the cart is empty.
+
+Awaiting your confirmation to proceed.

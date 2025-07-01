@@ -1,0 +1,270 @@
+Excellent. The authentication flow is now complete and robust. The application correctly reflects the user's state, seamlessly transitioning between the login and home views. This architecture is the foundation upon which we will build all other features.
+
+Now, let's start building the core functionality of the app. We'll begin with Product Management. First, we need to create the UI for the main application shell, which includes the bottom navigation bar, and the UI for the "Products" screen itself.
+
+Operator, here is your next assignment.
+
+Your workflow:
+
+Feed this prompt to the AI builder.
+
+Review the AI's output. It will modify js/home.js, create a new file js/products.js, and add new CSS to css/style.css.
+
+Integrate the new code. Remember to add the <script> tag for js/products.js in your index.html.
+
+Log into your app.
+
+You should now see the main app shell with a header and a bottom navigation bar with three icons: "POS", "Products", and "History".
+
+The "Products" tab should be active by default, and you should see the product list screen UI, including a search bar and a placeholder for the product list. The other tabs won't do anything yet.
+
+Test the responsiveness. The UI should look clean on both mobile and desktop views.
+
+Commit the verified code with the message: feat(ui): Build main app shell and products screen UI.
+
+Confirm back to me when you are ready to connect this screen to Firestore to display real product data.
+
+Prompt 2.1 (Web Edition): Main App Shell & Products Screen UI
+
+[CONTEXT]
+Currently, renderHomeScreen(user) in js/home.js renders a very simple welcome message. We need to replace this with the main application shell, which will contain a header, a content area, and a bottom navigation bar.
+
+Wireframe W2 & W4 (Combined):
+
+Generated code
++--------------------------------------------------+
+| Top Bar: [App Name]              [Logout Button] |
++--------------------------------------------------+
+|                                                  |
+|           // Content Area for selected tab       |
+|           // Initially shows W4                  |
+|                                                  |
+|  [Search Bar__________________________________]  |
+|  +--------------------------------------------+  |
+|  |       Your product list will appear here.  |  |
+|  +--------------------------------------------+  |
+|                                                  |
++--------------------------------------------------+
+| Bottom Nav Bar:                                  |
+| [ POS ]  [ Products ]  [ Sales History ]         |
++--------------------------------------------------+
+
+
+[OBJECTIVE]
+Rebuild the renderHomeScreen function to display a proper application shell. This shell will have a persistent header and bottom navigation. We will also create the UI for the "Products" view, which will be displayed in the content area by default.
+
+[INSTRUCTIONS]
+
+Create js/products.js:
+
+Create a new file at this path.
+
+Inside, create a function renderProductsScreen().
+
+This function will generate the HTML for the products screen content area (the search bar and the list area).
+
+It should not render the full page, only the content part. It should return the HTML string.
+
+Modify js/home.js:
+
+Completely rewrite the renderHomeScreen(user) function.
+
+It should now generate the HTML for the main app shell: a top header, a div with id="main-content", and a bottom navigation bar (<nav>).
+
+The bottom navigation bar should contain three buttons for "POS", "Products", and "History", each with an icon. Give the "Products" button an active class.
+
+After setting the shell's innerHTML for the #app-container, you will then call renderProductsScreen() and set the innerHTML of the #main-content div to the returned HTML string.
+
+Ensure the logout button functionality is preserved.
+
+Modify css/style.css:
+
+Add styling for the new application shell, specifically for the fixed bottom navigation bar and the content area, to ensure content can scroll without the navigation bar moving.
+
+Style the navigation buttons, including a distinct style for the .active button.
+
+Style the elements for the products screen (search bar, product list container).
+
+[DELIVERABLES]
+
+1. Complete code for the new file js/products.js:
+
+Generated javascript
+function renderProductsScreen() {
+  const productsHtml = `
+    <div class="product-list-container">
+      <div class="product-list-header">
+        <input type="search" id="product-search" placeholder="Search products...">
+        <button id="add-product-btn" class="btn btn-primary">+</button>
+      </div>
+      <div id="product-list" class="product-list">
+        <p>Loading products...</p>
+      </div>
+    </div>
+  `;
+  return productsHtml;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+2. Updated code for js/home.js (replace the entire file's content):
+
+Generated javascript
+function renderHomeScreen(user) {
+  const appContainer = document.getElementById('app-container');
+
+  // Main application shell
+  const shellHtml = `
+    <div class="app-shell">
+      <header class="app-header">
+        <h2>Store Keeper</h2>
+        <button id="logout-btn" class="btn btn-secondary">Logout</button>
+      </header>
+      <main id="main-content" class="main-content"></main>
+      <nav class="bottom-nav">
+        <button id="nav-pos" class="nav-btn">
+          <img src="https://img.icons8.com/ios/50/a0aec0/cash-register.png" alt="POS"/>
+          <span>POS</span>
+        </button>
+        <button id="nav-products" class="nav-btn active">
+          <img src="https://img.icons8.com/ios/50/a0aec0/box.png" alt="Products"/>
+          <span>Products</span>
+        </button>
+        <button id="nav-history" class="nav-btn">
+          <img src="https://img.icons8.com/ios/50/a0aec0/activity-history.png" alt="History"/>
+          <span>History</span>
+        </button>
+      </nav>
+    </div>
+  `;
+
+  appContainer.innerHTML = shellHtml;
+
+  // Render the default screen (Products) into the main content area
+  const mainContent = document.getElementById('main-content');
+  mainContent.innerHTML = renderProductsScreen();
+
+  // Re-attach logout event listener
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    auth.signOut();
+  });
+
+  // TODO: Add event listeners for nav buttons to switch views
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+3. Additional CSS for css/style.css (append this):
+
+Generated css
+/* App Shell */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto; /* Allows content to scroll */
+  padding: 1rem;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+  background-color: #fff;
+  border-top: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #a0aec0;
+  font-size: 0.75rem;
+  padding: 0 1rem;
+}
+
+.nav-btn img {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 4px;
+}
+
+.nav-btn.active {
+  color: #007bff;
+}
+
+.nav-btn.active img {
+  filter: invert(39%) sepia(58%) saturate(2375%) hue-rotate(196deg) brightness(105%) contrast(101%);
+}
+
+
+/* Products Screen */
+.product-list-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+#product-search {
+  flex-grow: 1;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#add-product-btn {
+  flex-shrink: 0;
+  width: 50px;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Css
+IGNORE_WHEN_COPYING_END
+
+[ANTI-HALLUCINATION CHECK]
+
+The renderHomeScreen function must render the shell, and renderProductsScreen must render the content. This separation is critical for switching views later.
+
+The bottom navigation must be styled to appear fixed at the bottom.
+
+Do not add any logic for fetching products or handling navigation clicks yet.
+
+Awaiting your confirmation to proceed.

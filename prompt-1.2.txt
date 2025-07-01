@@ -1,0 +1,228 @@
+Excellent. The foundational structure of our web app is in place. We have our HTML, our initial CSS for an app-like feel, and the Firebase SDKs are loaded and initialized.
+
+Now, let's create the UI for the login screen and the logic to display it dynamically.
+
+Operator, here is your next assignment.
+
+Your workflow:
+
+Feed this prompt to the AI builder.
+
+Review the AI's output. It should provide code for js/auth.js, css/style.css, and js/app.js.
+
+Integrate the new code into your project. You will be adding to existing files.
+
+Refresh your index.html in the browser. You should now see the login form, styled to look clean and centered, matching our wireframe.
+
+Check the responsiveness by using your browser's DevTools (F12) to switch to a mobile view (e.g., iPhone 12). It should look great.
+
+Commit the verified code to your Git repository with the message: feat(ui): Create and render login screen view.
+
+Confirm back to me when you are ready to add the login functionality.
+
+Prompt 1.2 (Web Edition): Login Screen UI and View Rendering
+
+[CONTEXT]
+We have a basic HTML structure with an empty <div id="app-container"></div>. Our js/app.js initializes Firebase, and js/auth.js is currently empty. Our css/style.css has basic body and container styles.
+
+Wireframe W1: Login Screen
+
+Generated code
++--------------------------------------------------+
+|                                                  |
+|              [App Logo]                          |
+|              Store Keeper                        |
+|                                                  |
+|   Email:     [___________________________]       |
+|                                                  |
+|   Password:  [___________________________]       |
+|                                                  |
+|              +------------------------+          |
+|              |         LOGIN          |          |
+|              +------------------------+          |
+|                                                  |
+|              [Error Message Area]                |
+|                                                  |
++--------------------------------------------------+
+
+
+[OBJECTIVE]
+Create the HTML and CSS for the login form. Then, write the JavaScript functions necessary to dynamically inject this HTML into our main app-container when the app loads.
+
+[INSTRUCTIONS]
+
+Modify js/auth.js:
+
+Create a function named renderLoginScreen().
+
+This function will be responsible for generating the HTML for our login form as a string.
+
+The HTML string should represent the structure from our wireframe: a form with an icon, a title, two input fields (one for email and one for password), a button, and a p tag for error messages.
+
+Give the form an id login-form. Give the email input an id login-email, the password input an id login-password, and the error paragraph an id login-error.
+
+The function should select the #app-container div and set its innerHTML to the generated HTML string.
+
+Modify css/style.css:
+
+Add styling for the new login form elements.
+
+Use Flexbox to center the form content vertically and horizontally.
+
+Style the inputs and button to be clean, modern, and have a large tap/click area for mobile-friendliness.
+
+Make the error message red and hide it by default.
+
+Modify js/app.js:
+
+At the bottom of the file, add a DOMContentLoaded event listener.
+
+When the DOM is fully loaded, it should call the renderLoginScreen() function from auth.js to display our login page by default.
+
+[DELIVERABLES]
+
+1. Complete code for js/auth.js:
+
+Generated javascript
+function renderLoginScreen() {
+  const appContainer = document.getElementById('app-container');
+
+  const loginHtml = `
+    <div class="auth-container">
+      <div class="auth-form-container">
+        <img src="https://img.icons8.com/pastel-glyph/64/000000/shop--v1.png" alt="Store Icon" class="auth-icon"/>
+        <h2 class="auth-title">Store Keeper</h2>
+        <form id="login-form">
+          <div class="input-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required>
+          </div>
+          <div class="input-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">LOGIN</button>
+          <p id="login-error" class="error-message"></p>
+        </form>
+      </div>
+    </div>
+  `;
+
+  appContainer.innerHTML = loginHtml;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+2. Additional CSS for css/style.css (append this to the existing content):
+
+Generated css
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.auth-icon {
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.auth-title {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.btn {
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  min-height: 1.2rem; /* Reserve space to prevent layout shift */
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Css
+IGNORE_WHEN_COPYING_END
+
+3. Additional JavaScript for js/app.js (append this to the existing content):
+
+Generated javascript
+// Main app entry point
+document.addEventListener('DOMContentLoaded', () => {
+  // For now, we always show the login screen on startup.
+  // Later, we will check if the user is already logged in.
+  renderLoginScreen();
+});
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+[ANTI-HALLUCINATION CHECK]
+
+Do not add any onclick or addEventListener logic yet. This prompt is purely for rendering the UI.
+
+The HTML must be generated via a JavaScript function, not placed statically in index.html.
+
+Use the exact class names and IDs specified to ensure the CSS and future JS will work correctly.
+
+Awaiting your confirmation to proceed.

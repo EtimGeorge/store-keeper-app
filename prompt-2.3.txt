@@ -1,0 +1,268 @@
+Excellent. Our application is now data-driven, displaying a real-time list of products directly from Firestore. This is a major milestone.
+
+The next logical step is to make the app interactive by allowing users to add new products. This will involve creating a modal (a pop-up form) that captures the product details and saves them to the database.
+
+Operator, here is your next assignment.
+
+Your workflow:
+
+Feed this prompt to the AI builder.
+
+Review the AI's output. It will add new HTML/CSS for the modal and new JavaScript functions in js/products.js.
+
+Integrate the new code into your project.
+
+Test the functionality:
+
+Log into the app and go to the Products screen.
+
+Click the "+" button. A modal form should appear over the screen.
+
+Try to submit the form with empty fields. It should show validation errors.
+
+Fill out the form with valid data and click "Save Product".
+
+The modal should close, and you should see the new product appear in your list almost instantly (thanks to our onSnapshot listener).
+
+Go to your Firestore console to confirm that the new document was created correctly in the products collection.
+
+Commit the verified code with the message: feat: Add functionality to create new products via modal.
+
+Confirm back to me when you are ready to add navigation logic to the other bottom tabs.
+
+Prompt 2.3 (Web Edition): Create Products via Modal Form
+
+[CONTEXT]
+On the products screen, we have a "+" button with the id add-product-btn. We also have a listenForProducts function that displays data. We need to wire up the "+" button to open a modal form for creating a new product.
+
+[OBJECTIVE]
+
+Create the HTML/CSS for a full-screen modal.
+
+Add a JavaScript function to render and show this modal.
+
+Add an event listener to the "Add Product" button (#add-product-btn) to trigger the modal.
+
+Implement the form submission logic to save a new document to the products collection in Firestore.
+
+[INSTRUCTIONS]
+
+Modify js/products.js:
+
+Create a new function, renderAddProductModal(). This function will create the HTML for the modal and append it to the body. The modal should be hidden by default.
+
+The modal HTML will include a form (#add-product-form) with inputs for name, sellingPrice, and stockQuantity. It will also have "Save" and "Cancel" buttons.
+
+Add an event listener to the "Cancel" button and the modal's background overlay to close/remove the modal.
+
+Add a 'submit' event listener to the #add-product-form.
+
+Inside the submit handler, prevent the default action.
+
+Get the values from the inputs. Perform basic validation (e.g., ensure fields are not empty and prices/quantities are numbers).
+
+If validation passes, create a new product object: { name, sellingPrice: Number(sellingPrice), stockQuantity: Number(stockQuantity) }.
+
+Call db.collection('products').add(newProduct).
+
+In the .then() block, close the modal.
+
+In the .catch() block, log the error.
+
+Modify css/style.css:
+
+Add styling for the modal overlay (.modal-overlay) and the modal content box (.modal-content). The overlay should cover the whole screen. The modal should be centered.
+
+Ensure the modal is hidden by default (e.g., display: none;) and has a class (e.g., .open) to make it visible.
+
+Connect the Trigger in js/home.js:
+
+Since the "+" button is rendered as part of the products screen, we need to attach its event listener after it's on the page. The best place is inside the renderHomeScreen function.
+
+Use an event listener on the #main-content container to listen for clicks, and check if the clicked element has the id add-product-btn. This is called event delegation and is efficient.
+
+When the button is clicked, call renderAddProductModal().
+
+[DELIVERABLES]
+
+1. Updated code for js/products.js (append new functions and logic):
+
+Generated javascript
+// Keep the existing renderProductsScreen() and listenForProducts() functions.
+// Append the following new code to the file.
+
+function renderAddProductModal() {
+  // Prevent duplicate modals
+  if (document.getElementById('add-product-modal')) return;
+
+  const modalHtml = `
+    <div id="add-product-modal" class="modal-overlay open">
+      <div class="modal-content">
+        <form id="add-product-form">
+          <h3>Add New Product</h3>
+          <div class="input-group">
+            <label for="product-name">Product Name</label>
+            <input type="text" id="product-name" required>
+          </div>
+          <div class="input-group">
+            <label for="product-price">Selling Price (₦)</label>
+            <input type="number" id="product-price" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="product-stock">Stock Quantity</label>
+            <input type="number" id="product-stock" required>
+          </div>
+          <p id="modal-error" class="error-message"></p>
+          <div class="modal-actions">
+            <button type="button" id="cancel-btn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  // --- Add Event Listeners for the Modal ---
+  const modal = document.getElementById('add-product-modal');
+  const cancelBtn = document.getElementById('cancel-btn');
+  const addProductForm = document.getElementById('add-product-form');
+
+  const closeModal = () => {
+    modal.remove();
+  };
+
+  // Close modal on cancel click or overlay click
+  cancelBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Handle form submission
+  addProductForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = document.getElementById('product-name').value;
+    const price = document.getElementById('product-price').value;
+    const stock = document.getElementById('product-stock').value;
+    const errorElement = document.getElementById('modal-error');
+
+    if (!name || !price || !stock) {
+      errorElement.textContent = 'All fields are required.';
+      return;
+    }
+
+    const newProduct = {
+      name: name,
+      sellingPrice: Number(price),
+      stockQuantity: Number(stock)
+    };
+
+    db.collection('products').add(newProduct)
+      .then(() => {
+        console.log('Product added successfully!');
+        closeModal();
+      })
+      .catch((error) => {
+        console.error('Error adding product: ', error);
+        errorElement.textContent = 'Failed to add product. Please try again.';
+      });
+  });
+}
+
+
+2. Updated code for js/home.js (add event delegation):
+
+Modify the renderHomeScreen function. Add the new event listener for the "+" button.
+
+Generated javascript
+// Inside renderHomeScreen(user)...
+// ... (code to render shell and product screen) ...
+
+  // Re-attach logout event listener
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    auth.signOut();
+  });
+
+  // --- START NEW CODE ---
+  // Event Delegation for dynamically added elements
+  const mainContentContainer = document.getElementById('main-content');
+  mainContentContainer.addEventListener('click', (event) => {
+    // Check if the add product button was clicked
+    if (event.target && event.target.id === 'add-product-btn') {
+      renderAddProductModal();
+    }
+  });
+  // --- END NEW CODE ---
+
+  // TODO: Add event listeners for nav buttons to switch views
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+JavaScript
+IGNORE_WHEN_COPYING_END
+
+3. Additional CSS for css/style.css (append this):
+
+Generated css
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Css
+IGNORE_WHEN_COPYING_END
+
+[ANTI-HALLUCINATION CHECK]
+
+The modal must be appended to the body, not inside the #app-container, to ensure it sits on top of all other content.
+
+The modal must be completely removed from the DOM when closed to prevent issues.
+
+Use event delegation for the "+" button click handler, as the button itself is added to the DOM dynamically.
+
+Awaiting your confirmation to proceed.
