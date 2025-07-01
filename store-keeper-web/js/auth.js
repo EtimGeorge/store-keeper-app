@@ -40,7 +40,6 @@ function renderLoginScreen() {
     // Sign in with Firebase
     auth.signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        // Signed in
         // SUCCESS! onAuthStateChanged will handle the navigation.
       })
       .catch((error) => {
