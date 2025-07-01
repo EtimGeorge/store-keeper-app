@@ -23,4 +23,42 @@ function renderLoginScreen() {
   `;
 
   appContainer.innerHTML = loginHtml;
+
+  // Add event listener to the form
+  const loginForm = document.getElementById('login-form');
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent page reload
+
+    // Get user input
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const errorElement = document.getElementById('login-error');
+
+    // Clear previous errors
+    errorElement.textContent = '';
+
+    // Sign in with Firebase
+    auth.signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Signed in
+        console.log('Login successful:', userCredential.user);
+        // We will navigate to the home screen in the next step.
+      })
+      .catch((error) => {
+        console.error('Login failed:', error);
+        // Display a user-friendly error message
+        switch (error.code) {
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+            errorElement.textContent = 'Invalid email or password. Please try again.';
+            break;
+          case 'auth/invalid-email':
+            errorElement.textContent = 'Please enter a valid email address.';
+            break;
+          default:
+            errorElement.textContent = 'An unknown error occurred. Please try again later.';
+            break;
+        }
+      });
+  });
 }
