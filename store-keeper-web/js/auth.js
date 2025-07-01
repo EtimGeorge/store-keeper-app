@@ -41,8 +41,7 @@ function renderLoginScreen() {
     auth.signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         // Signed in
-        console.log('Login successful:', userCredential.user);
-        // We will navigate to the home screen in the next step.
+        // SUCCESS! onAuthStateChanged will handle the navigation.
       })
       .catch((error) => {
         console.error('Login failed:', error);

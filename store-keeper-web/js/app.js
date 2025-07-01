@@ -15,9 +15,15 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Main app entry point
-document.addEventListener('DOMContentLoaded', () => {
-  // For now, we always show the login screen on startup.
-  // Later, we will check if the user is already logged in.
-  renderLoginScreen();
+// Main app router
+auth.onAuthStateChanged(user => {
+  if (user) {
+    // User is signed in.
+    console.log('Auth state changed: User is signed in.', user);
+    renderHomeScreen(user);
+  } else {
+    // User is signed out.
+    console.log('Auth state changed: User is signed out.');
+    renderLoginScreen();
+  }
 });

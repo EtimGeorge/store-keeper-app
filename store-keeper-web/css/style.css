@@ -87,3 +87,34 @@ body {
   font-size: 0.9rem;
   min-height: 1.2rem; /* Reserve space to prevent layout shift */
 }
+.main-container {
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.content {
+  padding-top: 1rem;
+}
