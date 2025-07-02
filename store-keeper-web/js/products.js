@@ -12,3 +12,37 @@ export function renderProductsScreen() {
   `;
   return productsHtml;
 }
+
+export function listenForProducts(db) {
+  const productListDiv = document.getElementById('product-list');
+  if (!productListDiv) return; // Exit if the element isn't on the page
+
+  db.collection('products').onSnapshot(snapshot => {
+    if (snapshot.empty) {
+      productListDiv.innerHTML = `<p>No products found. Use the '+' button to add your first product.</p>`;
+      return;
+    }
+
+    let productsHtml = '';
+    snapshot.forEach(doc => {
+      const product = doc.data();
+      const productId = doc.id;
+      productsHtml += `
+        <div class="product-item" data-id="${productId}">
+          <div class="product-info">
+            <span class="product-name">${product.name}</span>
+            <span class="product-stock">Stock: ${product.stockQuantity}</span>
+          </div>
+          <div class="product-price">
+            <span>₦${product.sellingPrice.toLocaleString()}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    productListDiv.innerHTML = productsHtml;
+  }, error => {
+    console.error("Error fetching products: ", error);
+    productListDiv.innerHTML = `<p class="error-message">Could not load products. Please try again later.</p>`;
+  });
+}

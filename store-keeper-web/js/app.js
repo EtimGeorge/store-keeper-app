@@ -47,7 +47,7 @@ onAuthStateChanged(auth, user => {
   if (user) {
     // User is signed in.
     console.log('Auth state changed: User is signed in.', user);
-    renderHomeScreen(user, auth);
+    renderHomeScreen(user, auth, db);
   } else {
     // User is signed out.
     console.log('Auth state changed: User is signed out.');

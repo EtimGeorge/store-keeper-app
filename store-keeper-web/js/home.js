@@ -1,7 +1,7 @@
 import { signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { renderProductsScreen } from "./products.js";
+import { renderProductsScreen, listenForProducts } from "./products.js";
 
-function renderHomeScreen(user, auth) {
+function renderHomeScreen(user, auth, db) {
   const appContainer = document.getElementById('app-container');
 
   // Main application shell
@@ -34,6 +34,9 @@ function renderHomeScreen(user, auth) {
   // Render the default screen (Products) into the main content area
   const mainContent = document.getElementById('main-content');
   mainContent.innerHTML = renderProductsScreen();
+
+  // Activate the listener for the products screen
+  listenForProducts(db);
 
   // Re-attach logout event listener
   document.getElementById('logout-btn').addEventListener('click', () => {
