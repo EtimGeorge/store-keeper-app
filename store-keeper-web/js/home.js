@@ -36,7 +36,7 @@ function renderHomeScreen(user, auth, db) {
   mainContent.innerHTML = renderProductsScreen();
 
   // Activate the listener for the products screen
-  listenForProducts(db);
+  listenForProducts(db); 
 
   // Re-attach logout event listener
   document.getElementById('logout-btn').addEventListener('click', () => {

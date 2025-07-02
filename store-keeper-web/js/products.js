@@ -1,3 +1,5 @@
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
 export function renderProductsScreen() {
   const productsHtml = `
     <div class="product-list-container">
@@ -17,7 +19,8 @@ export function listenForProducts(db) {
   const productListDiv = document.getElementById('product-list');
   if (!productListDiv) return; // Exit if the element isn't on the page
 
-  db.collection('products').onSnapshot(snapshot => {
+  const productsCollection = collection(db, 'products');
+  onSnapshot(productsCollection, snapshot => {
     if (snapshot.empty) {
       productListDiv.innerHTML = `<p>No products found. Use the '+' button to add your first product.</p>`;
       return;
