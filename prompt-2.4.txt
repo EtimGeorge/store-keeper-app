@@ -10,6 +10,7 @@ Feed this prompt to the AI builder.
 
 Review the AI's output. It will create two new JavaScript files (pos.js, history.js), modify home.js, and require a change to index.html.
 
+
 Integrate the new code. Crucially, remember to add the new <script> tags to index.html.
 
 Test the functionality:

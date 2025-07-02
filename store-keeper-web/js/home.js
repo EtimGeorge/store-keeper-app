@@ -1,5 +1,7 @@
 import { signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { renderProductsScreen, listenForProducts } from "./products.js";
+import { renderProductsScreen, listenForProducts, renderAddProductModal } from "./products.js";
+import { renderPosScreen } from "./pos.js";
+import { renderHistoryScreen } from "./history.js";
 
 function renderHomeScreen(user, auth, db) {
   const appContainer = document.getElementById('app-container');
@@ -43,7 +45,29 @@ function renderHomeScreen(user, auth, db) {
     signOut(auth);
   });
 
-  // TODO: Add event listeners for nav buttons to switch views
+  // --- NAVIGATION LOGIC ---
+  const navPosBtn = document.getElementById('nav-pos');
+  const navProductsBtn = document.getElementById('nav-products');
+  const navHistoryBtn = document.getElementById('nav-history');
+
+  const allNavButtons = [navPosBtn, navProductsBtn, navHistoryBtn];
+
+  function handleNavClick(activeBtn, renderFunction) {
+    allNavButtons.forEach(btn => btn.classList.remove('active'));
+    activeBtn.classList.add('active');
+    mainContent.innerHTML = renderFunction();
+
+    // Special case for products screen to re-attach listener
+    if (renderFunction === renderProductsScreen) {
+      listenForProducts(db);
+    }
+  }
+
+  navPosBtn.addEventListener('click', () => handleNavClick(navPosBtn, renderPosScreen));
+  navProductsBtn.addEventListener('click', () => handleNavClick(navProductsBtn, renderProductsScreen));
+  navHistoryBtn.addEventListener('click', () => handleNavClick(navHistoryBtn, renderHistoryScreen));
+
+  // --- End of Navigation Logic ---
 }
 
 export { renderHomeScreen };
